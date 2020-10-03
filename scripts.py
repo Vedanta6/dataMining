@@ -128,7 +128,7 @@ def execute_print_function_challenge():
 
 def execute_find_captain_room_challenge():
     """ Problem 1: Was not in the Introduction """
-    _ = int(input("Enter number of people in a group: ").strip())
+    # _ = int(input("Enter number of people in a group: ").strip())  # useless
     # unordered rooms list, example: 1 2 3 6 5 4 4 2 5 3 6 1 6 5 3 2 4 1 2 5 1 4 3 6 8 4 3 1 5 6 2
     rooms_list = re.split(r'\s+', input("Enter list of booked rooms (numbers are separated by space): "))
     rooms_list = list(map(int, rooms_list))
@@ -137,12 +137,134 @@ def execute_find_captain_room_challenge():
     print(captain_room)
 
 
+def execute_lists_comprehension_challenge():
+    """ Problem 1: Data types 1/6 """
+    x = int(input("x = "))
+    y = int(input("y = "))
+    z = int(input("z = "))
+    n = int(input("Coordinates sum should not be equal to: "))
+    print(
+        [
+            [xx, yy, zz]
+            for xx in range(x + 1)
+            for yy in range(y + 1)
+            for zz in range(z + 1)
+            if xx + yy + zz != n
+        ]
+    )
+
+
+def execute_runner_up_score_challenge():
+    """ Problem 1: Data types 2/6 """
+    # _ = int(input("Enter total number of scores: "))  # useless
+    # read scores
+    scores = re.split(r'\s+', input("Enter scores (numbers are separated by space): "))
+    # convert into ints
+    scores = map(int, scores)
+    sorted_unique_scores = sorted(list(set(scores)), reverse=True)
+    if len(sorted_unique_scores) > 1:
+        up_runner_score = sorted_unique_scores[1]
+        print(up_runner_score)
+    else:
+        print("Not sufficient number of diverse scores")
+
+
+def execute_nested_lists_challenge():
+    """ Problem 1: Data types 3/6 """
+    # process inputs
+    students_records = list()
+    for _ in range(int(input("Enter number of students you want to include: "))):
+        name = input("Student name: ").strip()
+        score = float(input("Student score: ").strip())
+        students_records.append([name, score])
+    # find the second lowest score
+    sorted_unique_scores = sorted(list(set([record[1] for record in students_records])))
+    if len(sorted_unique_scores) > 1:
+        second_lowest_score = sorted_unique_scores[1]
+        # get names of students with that score and sort alphabetically
+        student_names_with_second_lowest_score = sorted([
+            record[0] for record in students_records if record[1] == second_lowest_score
+        ])
+        if len(student_names_with_second_lowest_score):
+            print(*student_names_with_second_lowest_score, sep='\n')
+
+
+def execute_finding_percentage_challenge():
+    """ Problem 1: Data types 4/6 """
+    if __name__ == '__main__':
+        n = int(input("Enter number of students: "))
+        student_marks = dict()
+        for _ in range(n):
+            name, *line = re.split(r'\s+', input("Enter student and his grades (separated by space): "))
+            print(name, line)
+            scores = list(map(float, line))
+            student_marks[name] = scores
+        query_name = input("Enter a student name: ").strip()
+        if query_name in student_marks.keys():
+            query_student_scores = student_marks[query_name]
+            if query_student_scores > 0:
+                avg_query_student_score = round(sum(query_student_scores) / len(query_student_scores), 2)
+                # note: reminder = 0 leads to .0 result, needs to be corrected while converting into str
+                print(f"{avg_query_student_score:.2f}")
+
+
+def execute_lists_challenge():
+    """ Problem 1: Data types 5/6 """
+    # Initializing list
+    N = int(input("Enter number of command you would like to perform on a list: "))
+    tmp_list = list()
+    for _ in range(N):
+        command_name, *command_args = input("Command: ").strip().split()
+        command_args = list(map(int, command_args))
+        if command_name == 'insert' and len(command_args) == 2:
+            # insert i e: Insert integer  at position
+            tmp_list.insert(command_args[0], command_args[1])
+        elif command_name == 'print':
+            # print: Print the list
+            print(tmp_list)
+        elif command_name == 'remove' and len(command_args) == 1:
+            # remove e: Delete the first occurrence of integer
+            try:
+                tmp_list.remove(command_args[0])
+            except ValueError:
+                pass
+        elif command_name == 'append' and len(command_args) == 1:
+            # append e: Insert integer  at the end of the list
+            tmp_list.append(command_args[0])
+        elif command_name == 'sort':
+            # sort: Sort the list
+            tmp_list = sorted(tmp_list)
+        elif command_name == 'pop':
+            # pop: Pop the last element from the list
+            tmp_list.pop()  # last is by default
+        elif command_name == 'reverse':
+            tmp_list = tmp_list[::-1]
+
+
+def execute_tuples_challenge():
+    """ Problem 1: Data types 6/6 """
+    # _ = int(input("Enter number of elements: "))
+    integer_list = re.split(r'\s+', input("Enter integers (separated by space): "))
+    integer_list = list(map(int, integer_list))
+    integer_tuple = tuple(integer_list)
+    print(hash(integer_tuple))
+
+
 if __name__ == '__main__':
-    execute_say_hello_world_challenge()
-    execute_python_if_else_challenge()
-    execute_arithmetic_operators_challenge()
-    execute_numbers_division_challenge()
-    execute_loops_challenge()
-    execute_function_is_leap_challenge()
-    execute_print_function_challenge()
-    execute_find_captain_room_challenge()
+    # Problem 1: Introduction
+    # execute_say_hello_world_challenge()
+    # execute_python_if_else_challenge()
+    # execute_arithmetic_operators_challenge()
+    # execute_numbers_division_challenge()
+    # execute_loops_challenge()
+    # execute_function_is_leap_challenge()
+    # execute_print_function_challenge()
+    # execute_find_captain_room_challenge()
+
+    # Problem 1: Data types
+    # execute_lists_comprehension_challenge()
+    # execute_runner_up_score_challenge()
+    # execute_nested_lists_challenge()
+    # execute_finding_percentage_challenge()
+    # execute_lists_challenge()
+    execute_tuples_challenge()
