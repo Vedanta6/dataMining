@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import re
-from collections import Counter
+import textwrap
+from string import ascii_lowercase as letters
+from collections import Counter, OrderedDict
 
 
 def execute_say_hello_world_challenge():
@@ -250,6 +252,295 @@ def execute_tuples_challenge():
     print(hash(integer_tuple))
 
 
+def swap_case(s):
+    return s.swapcase()
+
+
+def execute_swap_case():
+    """ Problem 1: Strings 1/14 """
+    s = input()
+    result = swap_case(s)
+    print(result)
+
+
+def split_and_join(line):
+    return '-'.join(line.split(' '))
+
+
+def execute_split_and_join():
+    """ Problem 1: Strings 2/14 """
+    line = input()
+    result = split_and_join(line)
+    print(result)
+
+
+def print_full_name(a, b):
+    print(f"Hello {a} {b}! You just delved into python.")
+
+
+def execute_print_full_name():
+    """ Problem 1: Strings 3/14 """
+    first_name = input("Please enter your first name: ")
+    last_name = input("Please enter your last name: ")
+    print_full_name(first_name, last_name)
+
+
+def mutate_string(string, position, character):
+    if position < len(string):
+        composed_string = string[:position] + character
+        if (position + 1) < len(string):
+            composed_string += string[(position + 1):]
+        return composed_string
+    return string
+
+
+def execute_mutate_string():
+    """ Problem 1: Strings 4/14 """
+    s = input("Please enter a string you want to mutate: ")
+    i, c = input("Please enter index of character and a new character (separated by space): ").split()
+    s_new = mutate_string(s, int(i), c)
+    print(s_new)
+
+
+def count_substring(string, sub_string):
+    return len(re.findall(f"(?={sub_string})", string))
+
+
+def execute_count_substring():
+    """ Problem 1: Strings 5/14 """
+    string = input("Please enter a string: ").strip()
+    sub_string = input("Please enter a substring you would like to count: ").strip()
+
+    count = count_substring(string, sub_string)
+    print(count)
+
+
+def execute_string_validator():
+    """ Problem 1: Strings 6/14 """
+    if __name__ == '__main__':
+        s = input("Please enter a string to be validated: ")
+        functions = [
+            {
+                'function': lambda x: x.isalnum(),
+                'description': "Has any alphanumeric characters",
+                'value': False
+            },
+            {
+                'function': lambda x: x.isalpha(),
+                'description': "Has any alphabetical characters",
+                'value': False
+            },
+            {
+                'function': lambda x: x.isdigit(),
+                'description': "Has any digits characters",
+                'value': False
+            },
+            {
+                'function': lambda x: x.islower(),
+                'description': "Has any lowercase characters",
+                'value': False
+            },
+            {
+                'function': lambda x: x.isupper(),
+                'description': "Has any uppercase characters",
+                'value': False
+            },
+        ]
+        for char in s:
+            for function_dict in functions:
+                if not function_dict.get('value'):
+                    function_dict['value'] = function_dict['function'](char)
+        for function_dict in functions:
+            print(f"{function_dict.get('description')}: {function_dict.get('value')}")
+
+
+def execute_text_alignment():
+    """ Problem 1: Strings 7/14 """
+
+    thickness = int(input("Please enter an odd number: "))  # This must be an odd number
+    c = 'H'
+
+    # Top Cone
+    for i in range(thickness):
+        print((c * i).rjust(thickness - 1) + c + (c * i).ljust(thickness - 1))
+
+    # Top Pillars
+    for i in range(thickness + 1):
+        print((c * thickness).center(thickness * 2) + (c * thickness).center(thickness * 6))
+
+    # Middle BeltqA2
+    for i in range((thickness + 1) // 2):
+        print((c * thickness * 5).center(thickness * 6))
+
+    # Bottom Pillars
+    for i in range(thickness + 1):
+        print((c * thickness).center(thickness * 2) + (c * thickness).center(thickness * 6))
+
+    # Bottom Cone
+    for i in range(thickness):
+        print(((c * (thickness - i - 1)).rjust(thickness) + c + (c * (thickness - i - 1)).ljust(thickness)).rjust(
+            thickness * 6))
+
+
+def wrap(string, max_width):
+    return textwrap.fill(string, max_width)
+
+
+def execute_wrap():
+    """ Problem 1: Strings 8/14 """
+    string, max_width = input("Please enter string: "), int(input("Please enter max width: "))
+    result = wrap(string, max_width)
+    print(result)
+
+
+def execute_designer_door_mat():
+    """ Problem 1: Strings 9/14 """
+    max_dimensions = input("Please enter output height and width (separated by space): ").split(' ')
+    if len(max_dimensions) > 1:
+        max_height, max_width = int(max_dimensions[0]), int(max_dimensions[1])
+        # max_height, max_width = 11, 33
+        #     ---------------.|.---------------
+        #     ------------.|..|..|.------------
+        #     ---------.|..|..|..|..|.---------
+        #     ------.|..|..|..|..|..|..|.------
+        #     ---.|..|..|..|..|..|..|..|..|.---
+        #     -------------WELCOME-------------
+        #     ---.|..|..|..|..|..|..|..|..|.---
+        #     ------.|..|..|..|..|..|..|.------
+        #     ---------.|..|..|..|..|.---------
+        #     ------------.|..|..|.------------
+        #     ---------------.|.---------------
+
+        n_decorating_rows = (max_height - 1) // 2
+
+        # Top
+        for i in range(n_decorating_rows):
+            print(('.|.' * (i * 2 + 1)).center(max_width, '-'))
+
+        # Center
+        print('WELCOME'.center(max_width, '-'))
+
+        # Bottom
+        for i in range(n_decorating_rows):
+            print(('.|.' * ((n_decorating_rows - 1 - i) * 2 + 1) ).center(max_width, '-'))
+
+
+def print_formatted(number):
+    bin_number = str(bin(number))[2:]
+    bin_number_width = len(bin_number)
+    for i in range(1, number + 1):
+        bin_i = str(bin(i))[2:].rjust(bin_number_width)
+        decimal_i = str(i).rjust(bin_number_width)
+        oct_i = str(oct(i))[2:].rjust(bin_number_width)
+        hex_i = str(hex(i))[2:].upper().rjust(bin_number_width)
+        print(decimal_i, oct_i, hex_i, bin_i)
+
+
+def execute_print_formatted():
+    """ Problem 1: Strings 10/14 """
+    n = int(input("Enter a number: "))
+    print_formatted(n)
+
+
+def print_rangoli(size):
+    # --------e--------
+    # ------e-d-e------
+    # ----e-d-c-d-e----
+    # --e-d-c-b-c-d-e--
+    # e-d-c-b-a-b-c-d-e
+    # --e-d-c-b-c-d-e--
+    # ----e-d-c-d-e----
+    # ------e-d-e------
+    # --------e--------
+    if size <= len(letters):
+        if size < len(letters):
+            used_letters = letters[:size]
+        else:
+            used_letters = letters
+
+        max_width = (len(used_letters) - 1) * 2 * 2 + 1
+        # Top
+        for i in range(len(used_letters) - 1):
+            used_letters_ = used_letters[::-1][:(i + 1)][::-1]
+            print('-'.join((used_letters_[::-1] + used_letters_[1:])).center(max_width, '-'))
+
+        # Center
+        print('-'.join((used_letters[::-1] + used_letters[1:])).center(max_width, '-'))
+
+        # Bottom
+        for i in range(len(used_letters) - 1):
+            used_letters_ = used_letters[::-1][:(len(used_letters) - 1 - i)][::-1]
+            print('-'.join((used_letters_[::-1] + used_letters_[1:])).center(max_width, '-'))
+
+
+def execute_print_rangoli():
+    """ Problem 1: Strings 11/14 """
+    n = int(input("Please enter a number: "))
+    print_rangoli(n)
+
+
+def solve(s):
+    # title() didn't work which is silly
+    return ' '.join(map(str.capitalize, s.split(' ')))
+
+
+def execute_solve():
+    """ Problem 1: Strings 12/14 """
+    # fptr = open(os.environ['OUTPUT_PATH'], 'w')
+    s = input('Enter a string to be capitalized: ')
+    result = solve(s)
+    print(result)
+    # fptr.write(result + '\n')
+    # fptr.close()
+
+
+def minion_game(string):
+    string = string.upper()
+    # define vowels and consonants
+    vowels = list('AEIOU')  # requirement
+    # from string import ascii_uppercase as uppercase_letters  # could be handy to secure that letters are used
+    # consonants = [letter for letter in uppercase_letters if letter not in vowels]
+    # define players
+    consonants_player_name = 'Stuart'
+    consonants_player_score = 0
+    vowels_player_name = 'Kevin'
+    vowels_player_score = 0
+
+    # simulate the game
+    for i in range(len(string)):
+        if string[i] in vowels:
+            vowels_player_score += (len(string) - i)
+        else:  # elif string[i] in consonants:
+            consonants_player_score += (len(string) - i)
+
+    # print out results
+    if consonants_player_score > vowels_player_score:
+        print(consonants_player_name, consonants_player_score)
+    elif consonants_player_score < vowels_player_score:
+        print(vowels_player_name, vowels_player_score)
+    else:
+        print("Draw")
+
+
+def execute_minion_game():
+    """ Problem 1: Strings 13/14 """
+    s = input("Enter a string: ").upper()
+    # s = 'BANANA'
+    minion_game(s)
+
+
+def merge_the_tools(string, k):
+    for i in range(len(string) // k):
+        print("".join(OrderedDict.fromkeys(string[(i * k):(i * k + k)])))
+
+
+def execute_merge_the_tools():
+    """ Problem 1: Strings 14/14 """
+    string, k = input("Please enter a string: "), int(input("Please enter a number for string split: "))
+    # string, k = "AABCAAADA", 3
+    merge_the_tools(string, k)
+
+
 if __name__ == '__main__':
     # Problem 1: Introduction
     # execute_say_hello_world_challenge()
@@ -267,4 +558,20 @@ if __name__ == '__main__':
     # execute_nested_lists_challenge()
     # execute_finding_percentage_challenge()
     # execute_lists_challenge()
-    execute_tuples_challenge()
+    # execute_tuples_challenge()
+
+    # Problem 1: Strings
+    # execute_swap_case()
+    # execute_split_and_join()
+    # execute_print_full_name()
+    # execute_mutate_string()
+    # execute_count_substring()
+    # execute_string_validator()
+    # execute_text_alignment()
+    # execute_wrap()
+    # execute_designer_door_mat()
+    # execute_print_formatted()
+    # execute_print_rangoli()
+    # execute_solve()
+    # execute_minion_game()
+    execute_merge_the_tools()
