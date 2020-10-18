@@ -128,17 +128,6 @@ def execute_print_function_challenge():
         print("Could not convert input to integer")
 
 
-def execute_find_captain_room_challenge():
-    """ Problem 1: Was not in the Introduction """
-    # _ = int(input("Enter number of people in a group: ").strip())  # useless
-    # unordered rooms list, example: 1 2 3 6 5 4 4 2 5 3 6 1 6 5 3 2 4 1 2 5 1 4 3 6 8 4 3 1 5 6 2
-    rooms_list = re.split(r'\s+', input("Enter list of booked rooms (numbers are separated by space): "))
-    rooms_list = list(map(int, rooms_list))
-    counter = Counter(rooms_list)
-    captain_room = counter.most_common()[-1][0]
-    print(captain_room)
-
-
 def execute_lists_comprehension_challenge():
     """ Problem 1: Data types 1/6 """
     x = int(input("x = "))
@@ -541,6 +530,168 @@ def execute_merge_the_tools():
     merge_the_tools(string, k)
 
 
+def average(array) -> object:
+    unique_elements = set(array)
+    return sum(unique_elements) / len(unique_elements)
+
+
+def execute_average():
+    """ Problem 1: Sets 1/13 """
+    # n = int(input("Please enter array size: "))
+    arr = list(map(int, input("Please enter elements of an array (separated by spaces): ").split()))
+    # arr = [161, 182, 161, 154, 176, 170, 167, 171, 170, 174]
+    result = average(arr)
+    print(result)
+
+
+def execute_disjoint_sets():
+    """ Problem 1: Sets 2/13 """
+    # sizes = list(map(int, input().split()))  # 3 2
+    # arr_size, set_size = sizes[:2]
+    arr = list(map(int, input("Please enter elements of an array (separated by spaces): ").split()))  # 1 5 3
+    set_a = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 3 1
+    set_b = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 5 7
+    # Considering matching elements as success for set A and failure for set B respectively
+    print(sum([int(el in set_a) - int(el in set_b) for el in arr]))
+
+
+def execute_symmetric_difference():
+    """ Problem 1: Sets 3/13 """
+    # set_1_size = int(input())  # 4
+    set_1 = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 2 4 5 9
+    # set_2_size = int(input())  # 4
+    set_2 = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 2 4 11 12
+    for i in sorted(set_1.symmetric_difference(set_2)):
+        print(i)  # 5 9 11 12
+
+
+def execute_set_add():
+    """ Problem 1: Sets 4/13 """
+    n_countries = int(input("Please enter number of countries you would like to consider: "))
+    unique_countries = set()
+    for i in range(n_countries):
+        unique_countries.add(input("Please enter a name of country: "))
+    print(len(unique_countries))
+
+
+def execute_sets_commands():
+    """ Problem 1: Sets 5/13 """
+    _ = int(input("Enter number of elements in a set: "))  # 9
+    s = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 1 2 3 4 5 6 7 8 9
+    n = int(input("Enter number of commands you would like to perform on a set: "))  # 10
+    for _ in range(n):
+        command_name, *command_args = input("Command: ").strip().split()
+        command_args = list(map(int, command_args))
+        if command_name == 'remove' and len(command_args) == 1:
+            # remove e: Delete an element from a set
+            try:
+                s.remove(command_args[0])
+            except ValueError:
+                pass
+        elif command_name == 'discard' and len(command_args) == 1:
+            # discard e: Delete an element from a set without raising an error
+            s.discard(command_args[0])
+        elif command_name == 'pop':
+            try:
+                # Pop an element from a set
+                s.pop()
+            except KeyError:
+                pass
+    print(sum(s))
+
+
+def execute_sets_union():
+    """ Problem 1: Sets 6/13 """
+    # _ = int(input("Enter number of elements in a set: "))  # 9
+    s1 = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 1 2 3 4 5 6 7 8 9
+    # _ = int(input("Enter number of elements in a set: ")) # 9
+    s2 = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 10 1 2 3 11 21 55 6 8
+    print(len(s1.union(s2)))
+
+
+def execute_sets_intersection():
+    """ Problem 1: Sets 7/13 """
+    _ = int(input())  # "Enter number of elements in a set: "  # 9
+    s1 = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "  # 1 2 3 4 5 6 7 8 9
+    _ = int(input())  # "Enter number of elements in a set: "  # 9
+    s2 = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "  # 10 1 2 3 11 21 55 6 8
+    print(len(s1.intersection(s2)))
+
+
+def execute_sets_difference():
+    """ Problem 1: Sets 8/13 """
+    # _ = int(input("Enter number of elements in a set: "))  # 9
+    s1 = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 1 2 3 4 5 6 7 8 9
+    # _ = int(input("Enter number of elements in a set: ")) # 9
+    s2 = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 10 1 2 3 11 21 55 6 8
+    print(len(s1.difference(s2)))
+
+
+def execute_sets_symmetric_difference():
+    """ Problem 1: Sets 9/13 """
+    # _ = int(input("Enter number of elements in a set: "))  # 9
+    s1 = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 1 2 3 4 5 6 7 8 9
+    # _ = int(input("Enter number of elements in a set: ")) # 9
+    s2 = set(map(int, input("Please enter elements of a set (separated by spaces): ").split()))  # 10 1 2 3 11 21 55 6 8
+    print(len(s1.symmetric_difference(s2)))
+
+
+def execute_sets_mutations():
+    """ Problem 1: Sets 10/13 """
+    _ = int(input())  # "Enter number of elements in a set: "
+    s = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "
+    n = int(input())  # "Enter number of commands you would like to perform on a set: "
+    for _ in range(n):
+        command_name, _ = input().strip().split()  # "Command: "
+        command_set = set(map(int, input().split()))  # set to apply a command with
+        if command_name == 'update':
+            s.update(command_set)
+        elif command_name == 'intersection_update':
+            s.intersection_update(command_set)
+        elif command_name == 'difference_update':
+            s.difference_update(command_set)
+        elif command_name == 'symmetric_difference_update':
+            s.symmetric_difference_update(command_set)
+
+    print(sum(s))
+
+
+def execute_find_captain_room_challenge():
+    """ Problem 1: Sets 11/13 """
+    # _ = int(input("Enter number of people in a group: ").strip())  # useless
+    # unordered rooms list, example: 1 2 3 6 5 4 4 2 5 3 6 1 6 5 3 2 4 1 2 5 1 4 3 6 8 4 3 1 5 6 2
+    rooms_list = re.split(r'\s+', input("Enter list of booked rooms (numbers are separated by space): "))
+    rooms_list = list(map(int, rooms_list))
+    counter = Counter(rooms_list)
+    captain_room = counter.most_common()[-1][0]
+    print(captain_room)
+
+
+def execute_check_subset():
+    """ Problem 1: Sets 12/13 """
+    # The third line of each test case contains the number of elements in set .
+    # The fourth line of each test case contains the space separated elements of set .
+    n = int(input())  # "Enter number of test cases: "
+    for _ in range(n):
+        _ = int(input())  # "Enter number of elements in a set: "
+        s1 = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "
+        _ = int(input())  # "Enter number of elements in a set: "
+        s2 = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "
+        print(s1.issubset(s2))
+
+
+def execute_check_strict_superset():
+    """ Problem 1: Sets 13/13 """
+    s = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "
+    n = int(input())  # "Enter number of sets: "
+    res = True
+    for _ in range(n):
+        s_i = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "
+        res = s.issuperset(s_i)
+        if not res: break
+    print(res)
+
+
 if __name__ == '__main__':
     # Problem 1: Introduction
     # execute_say_hello_world_challenge()
@@ -550,7 +701,6 @@ if __name__ == '__main__':
     # execute_loops_challenge()
     # execute_function_is_leap_challenge()
     # execute_print_function_challenge()
-    # execute_find_captain_room_challenge()
 
     # Problem 1: Data types
     # execute_lists_comprehension_challenge()
@@ -574,4 +724,20 @@ if __name__ == '__main__':
     # execute_print_rangoli()
     # execute_solve()
     # execute_minion_game()
-    execute_merge_the_tools()
+    # execute_merge_the_tools()
+
+    # Problem 1: Sets
+    # execute_average()
+    # execute_disjoint_sets()
+    # execute_symmetric_difference()
+    # execute_set_add()
+    # execute_sets_commands()
+    # execute_sets_union()
+    # execute_sets_intersection()
+    # execute_sets_difference()
+    # execute_sets_symmetric_difference()
+    # execute_sets_mutations()
+    # execute_find_captain_room_challenge()
+    # execute_check_subset()
+    execute_check_strict_superset()
+
