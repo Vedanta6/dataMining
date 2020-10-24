@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import re
 import textwrap
-from string import ascii_lowercase as letters
+from datetime import datetime
+from string import ascii_lowercase as letters, ascii_letters
 from collections import Counter, OrderedDict, defaultdict, namedtuple, deque
+import calendar
+import email.utils
 
 
 def execute_say_hello_world_challenge():
@@ -821,6 +824,185 @@ def execute_piling_up():
             print('Yes')
 
 
+def execute_calendar_module():
+    """ Problem 1: Date and Time 1/2 """
+    # NOTE: print(calendar.TextCalendar(firstweekday=6).formatyear(2020)) -> prints the whole calendar, handy
+    month, day, year = map(int, input().split())  # MM DD YYYY
+    print(calendar.day_name[calendar.weekday(year=year, month=month, day=day)].upper())
+
+
+def time_delta(t1: str, t2: str):
+    # Examples:
+    # Sun 10 May 2015 13:54:36 -0700
+    # Sun 10 May 2015 13:54:36 -0000
+    # Sat 02 May 2015 19:54:36 +0530
+    # Fri 01 May 2015 13:54:36 -0000
+    input_format = '%a %d %b %Y %H:%M:%S %z'
+    t1 = datetime.strptime(t1, input_format)
+    t2 = datetime.strptime(t2, input_format)
+    diff = int(abs((t2 - t1).total_seconds()))
+    return diff
+
+
+def execute_time_delta():
+    """ Problem 1: Date and Time 2/2 """
+    # fptr = open(os.environ['OUTPUT_PATH'], 'w')
+    t = int(input())
+    for t_itr in range(t):
+        t1 = input()
+        t2 = input()
+        delta = time_delta(t1, t2)
+        print(delta)
+        # fptr.write(delta + '\n')
+    # fptr.close()
+
+
+def execute_exceptions():
+    """ Problem 1: Exceptions 1/1 """
+    n = int(input())
+    for _ in range(n):
+        try:
+            a, b = list(map(int, input().split()))
+            print(a // b)
+        except (ZeroDivisionError, ValueError) as e:
+            print("Error Code:", e)
+
+
+def execute_zipped():
+    """ Problem 1: Built-ins 1/3 """
+    _, n_records = list(map(int, input().split()))
+    grades = list()
+    for _ in range(n_records):
+        grades.append(list(map(float, input().split())))
+
+    for i in zip(*grades):
+        print(sum(i) / len(i))
+
+
+def execute_athlete_sort():
+    """ Problem 1: Built-ins 2/3 """
+    n, _ = list(map(int, input().split()))
+
+    arr = []
+    for _ in range(n):
+        arr.append(list(map(int, input().rstrip().split())))
+
+    k = int(input())
+    for record in sorted(arr, key=lambda x: x[k]):
+        print(*record)
+
+
+def execute_sorting():
+    """ Problem 1: Built-ins 3/3 """
+    print(
+        *sorted(input(), key=(ascii_letters + '1357902468').index),
+        sep=''
+    )
+
+
+def execute_map_and_lambda():
+    """ Problem 1: Python Functionals 1/1 """
+    cube = lambda x: x ** 3
+
+    def fibonacci(n):
+        # return a list of fibonacci numbers
+        numbers = [0, 1]
+        for _ in range(n - 2):
+            numbers.append(sum(numbers[-2:]))
+        return numbers[:n]
+
+    n = int(input())
+    print(list(map(cube, fibonacci(n))))
+
+
+def execute_detect_floating_point_number():
+    """ Problem 1: Regex and Parsing challenges 1/17 """
+    for _ in range(int(input())):
+        print(bool(re.match(r'^[+-]?[0-9]*\.[0-9]+$', input())))
+
+
+def execute_re_split():
+    """ Problem 1: Regex and Parsing challenges 2/17 """
+    regex_pattern = r",|\."
+    print("\n".join(re.split(regex_pattern, input())))
+
+
+def execute_re_groups():
+    """ Problem 1: Regex and Parsing challenges 3/17 """
+    # Exmaples:
+    # >>> import re
+    # >>> m = re.match(r'(\w+)@(\w+)\.(\w+)','username@HR.com')
+    # >>> m.group(0)       # The entire match
+    # 'username@HR.com'
+    # >>> m.group(1)       # The first parenthesized subgroup.
+    # 'username'
+    # >>> m.group(2)       # The second parenthesized subgroup.
+    # 'HR'
+    # >>> m.group(3)       # The third parenthesized subgroup.
+    # 'com'
+    # >>> m.group(1,2,3)   # Multiple arguments give us a tuple.
+    # ('username', 'HR', 'com')
+    # >>> m = re.match(r'(\w+)@(\w+)\.(\w+)','username@HR.com')
+    # >>> m.groups()
+    # ('username', 'HR', 'com')
+    # >>> m = re.match(r'(?P<user>\w+)@(?P<website>\w+)\.(?P<extension>\w+)','myname@HR.com')
+    # >>> m.groupdict()
+    # {'website': 'HR', 'user': 'myname', 'extension': 'com'}
+    m = re.search(r'([a-zA-Z0-9])\1+', input())
+    print(m.group(1) if m else -1)
+
+
+def execute_re_find_all():
+    """ Problem 1: Regex and Parsing challenges 4/17 """
+    # Example: 
+    # map(lambda x: x.group(),re.finditer(r'\w','http: //www.HR.com/'))
+    # ['h', 't', 't', 'p', 'w', 'w', 'w', 'H', 'R']
+    vowels = 'aeiou'
+    consonants = ''.join(set(letters) - set(vowels))
+    a = re.findall(r"(?<=[%s])([%s]{2,})[%s]" % (consonants, vowels, consonants), input(), re.IGNORECASE)
+    print('\n'.join(a or ['-1']))
+
+
+def execute_re_start():
+    """ Problem 1: Regex and Parsing challenges 5/17 """
+    input_string, pattern = input(), input()
+    pattern_shift = len(pattern) - 1
+    found_matches = list(re.finditer(r'(?={})'.format(pattern), input_string))
+    if found_matches:
+        print('\n'.join(str((m.start(), m.start() + pattern_shift)) for m in found_matches))
+    else:
+        print('(-1, -1)')
+
+
+def execute_re_substitution():
+    """ Problem 1: Regex and Parsing challenges 6/17 """
+    n = int(input())
+    for _ in range(n):
+        print(re.sub(r'(?<= )(&&|\|\|)(?= )', lambda x: 'and' if x.group() == '&&' else 'or', input()))
+
+
+def execute_re_roman_numerals():
+    """ Problem 1: Regex and Parsing challenges 7/17 """
+    regex_pattern = r"M{0,3}(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[VX]|V?I{0,3})$"
+    print(str(bool(re.match(regex_pattern, input()))))
+
+
+def execute_re_validate_phone_numbers():
+    """ Problem 1: Regex and Parsing challenges 8/17 """
+    n = int(input())
+    for _ in range(n):
+        print('YES' if re.match(r'[789]\d{9}$', input()) else 'NO')
+
+
+def execute_re_validate_emails():
+    """ Problem 1: Regex and Parsing challenges 9/17 """
+    n = int(input())
+    for _ in range(n):
+        name, addr = email.utils.parseaddr(input())
+        if bool(re.match('[a-zA-Z](\w|-|\.)*@[a-zA-Z]*\.[a-zA-Z]{0,3}$', addr)) :
+            print(email.utils.formataddr((name, addr)))
+
+
 if __name__ == '__main__':
     # Problem 1: Introduction
     # execute_say_hello_world_challenge()
@@ -878,4 +1060,30 @@ if __name__ == '__main__':
     # execute_word_order()
     # execute_deque()
     # execute_company_logo()
-    execute_piling_up()
+    # execute_piling_up()
+
+    # Problem 1: Date and Time
+    # execute_calendar_module()
+    # execute_time_delta()
+
+    # Problem 1: Exceptions
+    # execute_exceptions()
+
+    # Problem 1: Built-ins
+    # execute_zipped()
+    # execute_athlete_sort()
+    # execute_sorting()
+
+    # Problem 1: Python Functionals
+    # execute_map_and_lambda()
+
+    # Problem 1: Regex and Parsing challenges
+    # execute_detect_floating_point_number()
+    # execute_re_split()
+    # execute_re_groups()
+    # execute_re_find_all()
+    # execute_re_start()
+    # execute_re_substitution()
+    # execute_re_roman_numerals()
+    # execute_re_validate_phone_numbers()
+    execute_re_validate_emails()
