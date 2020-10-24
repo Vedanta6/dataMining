@@ -2,7 +2,7 @@
 import re
 import textwrap
 from string import ascii_lowercase as letters
-from collections import Counter, OrderedDict
+from collections import Counter, OrderedDict, defaultdict, namedtuple, deque
 
 
 def execute_say_hello_world_challenge():
@@ -692,6 +692,135 @@ def execute_check_strict_superset():
     print(res)
 
 
+def execute_collections_counter():
+    """ Problem 1: Collections 1/8 """
+    _ = int(input())  # "Enter number of shoes: "
+    shoe_sizes = Counter(map(int, input().split()))  # "Please enter shoe sizes of the shop (separated by spaces): "
+    n_customers = int(input())  # "Enter number of customers: "
+    money_earned = 0
+    for _ in range(n_customers):
+        # "Please enter shoe size and price (separated by spaces): "
+        shoe_size, shoe_price = list(map(int, input().split()))
+        if shoe_sizes[shoe_size]:
+            money_earned += shoe_price
+            shoe_sizes[shoe_size] -= 1
+    print(money_earned)
+
+
+def execute_default_dict():
+    """ Problem 1: Collections 2/8 """
+    n, m = list(map(int, input().split()))  # "Enter M and N separated by space: "
+    content_dict = defaultdict(list)
+    for i in range(1, n + 1):
+        # collect words for A and their places
+        content_dict[input()].append(i)
+    for _ in range(m):
+        # check if a word has appeared in A
+        b_word = input()
+        if content_dict[b_word]:
+            print(" ".join(map(str, content_dict[b_word])))
+        else:
+            print(-1)
+
+
+def execute_named_tuple():
+    """ Problem 1: Collections 3/8 """
+    # example:
+    # Point = namedtuple('Point','x,y')
+    # >>> pt1 = Point(1,2)
+    # >>> pt2 = Point(3,4)
+    # >>> dot_product = ( pt1.x * pt2.x ) +( pt1.y * pt2.y )
+    # The first line contains an integer , the total number of students.
+    # The second line contains the names of the columns in any order.
+    # The next  lines contains the , ,  and , under their respective column names.
+    # 5
+    # ID         MARKS      NAME       CLASS
+    # 1          97         Raymond    7
+    # 2          50         Steven     4
+    # 3          91         Adrian     9
+    # 4          72         Stewart    5
+    # 5          80         Peter      6
+    n_records = int(input())  # "Enter number of rows of a spreadsheet: "
+    # "Enter names of the columns in any order: "  # columns are fixed to be ID, MARKS, NAME, CLASS but order may change
+    Record = namedtuple('Record', ','.join(input().split()))
+    avg_grade = 0
+    for record_i in range(n_records):
+        avg_grade += int(Record(*input().split()).MARKS)
+    print(avg_grade / n_records)
+
+
+def execute_ordered_dict():
+    """ Problem 1: Collections 4/8 """
+    n = int(input())  # "Enter number of items: "
+    shop_dict = OrderedDict()
+    for _ in range(n):
+        item_name, item_price = input().rsplit(' ', maxsplit=1)  # "Enter item name and price space separated: "
+        if item_name not in shop_dict.keys():
+            shop_dict[item_name] = 0
+        shop_dict[item_name] += int(item_price)
+    for k, v in shop_dict.items():
+        print(k, v)
+
+
+def execute_word_order():
+    """ Problem 1: Collections 5/8 """
+    # On the first line, output the number of distinct words from the input.
+    # On the second line, output the number of occurrences for each distinct word according to their appearance.
+    n = int(input())  # "Enter number of items: "
+    words_counter = Counter()
+    for _ in range(n):
+        words_counter.update(Counter([input()]))  # "Enter a word: "
+    print(len(words_counter))
+    print(' '.join(map(str, list(dict(words_counter).values()))))
+
+
+def execute_deque():
+    """ Problem 1: Collections 6/8 """
+    n = int(input())  # "Enter number of commands you would like to perform on a deque: "
+    tmp_deque = deque()
+    for _ in range(n):
+        command_name, *command_args = input().strip().split()  # "Command: "
+        command_args = list(map(int, command_args))
+        if command_name == 'append' and len(command_args) == 1:
+            # append e: Append an element
+            tmp_deque.append(command_args[0])
+        elif command_name == 'pop':
+            # pop: Pop an element
+            tmp_deque.pop()
+        elif command_name == 'popleft':
+            # popleft: Pop an element from the left
+            tmp_deque.popleft()
+        elif command_name == 'appendleft' and len(command_args) == 1:
+            # appendleft e: Append an element to the left
+            tmp_deque.appendleft(command_args[0])
+    print(' '.join(map(str, tmp_deque)))
+
+
+def execute_company_logo():
+    """ Problem 1: Collections 7/8 """
+    letters = sorted(input())  # "Enter number of items: "
+    common_letters_counter = dict(Counter(letters).most_common(3))
+    for letter, counter in common_letters_counter.items():
+        print(f"{letter} {counter}")
+
+
+def execute_piling_up():
+    """ Problem 1: Collections 8/8 """
+    for _ in range(int(input())):
+        _, cubes_queue = input(), deque(map(int, input().split()))
+
+        for cube_i in reversed(sorted(cubes_queue)):
+            if cubes_queue[-1] == cube_i:
+                cubes_queue.pop()
+            elif cubes_queue[0] == cube_i:
+                cubes_queue.popleft()
+            else:
+                print('No')
+                break
+        else:
+            print('Yes')
+
+
 if __name__ == '__main__':
     # Problem 1: Introduction
     # execute_say_hello_world_challenge()
@@ -739,5 +868,14 @@ if __name__ == '__main__':
     # execute_sets_mutations()
     # execute_find_captain_room_challenge()
     # execute_check_subset()
-    execute_check_strict_superset()
+    # execute_check_strict_superset()
 
+    # Problem 1: Collections
+    # execute_collections_counter()
+    # execute_default_dict()
+    # execute_named_tuple()
+    # execute_ordered_dict()
+    # execute_word_order()
+    # execute_deque()
+    # execute_company_logo()
+    execute_piling_up()
