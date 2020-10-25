@@ -1393,8 +1393,125 @@ def execute_numpy_linear_algebra():
     print(np.round(np.linalg.det(arr), 2))
 
 
+def birthdayCakeCandles(candles):
+    counter = Counter(candles).most_common(1)
+    if counter:
+        return counter[0][1]
+    return -1
+
+
+def execute_birthday_cake_candles_challenge():
+    """ Problem 2: Birthday Cake Candles challenge 1/6 """
+    # fptr = open(os.environ['OUTPUT_PATH'], 'w')
+    _ = int(input().strip())
+    candles = list(map(int, input().rstrip().split()))
+    result = birthdayCakeCandles(candles)
+    # fptr.write(str(result) + '\n')
+    # fptr.close()
+    print(result)
+
+
+def kangaroo(x1, v1, x2, v2):
+    # x1 + n * v1 = x2 + n * v2
+    # n * (v2 - v1) = (x1 - x2)
+    # (x1 - x2) % (v2 - v1) == 0 => exists int n
+    is_success = False
+    if v2 == v1 and x1 == x2:
+        is_success = True
+    elif v2 != v1:
+        # min (v2 - v1) = 1, max (x1 - x2) = 10000
+        is_success = (x1 - x2) % (v2 - v1) == 0 and 0 < (x1 - x2) // (v2 - v1) < 10000
+    return 'YES' if is_success else 'NO'
+
+
+def execute_kangaroo_challenge():
+    """ Problem 2: Number Line Jumps challenge 2/6 """
+    # fptr = open(os.environ['OUTPUT_PATH'], 'w')
+    x1V1X2V2 = input().split()
+    x1 = int(x1V1X2V2[0])
+    v1 = int(x1V1X2V2[1])
+    x2 = int(x1V1X2V2[2])
+    v2 = int(x1V1X2V2[3])
+    result = kangaroo(x1, v1, x2, v2)
+    # fptr.write(result + '\n')
+    # fptr.close()
+    print(result)
+
+
+def viral_advertising(n_days):
+    liked = [2]  # first day is predefined
+    for _ in range(n_days - 1):
+        liked.append(liked[-1] * 3 // 2)
+    return sum(liked)
+
+
+def execute_viral_advertising_challenge():
+    """ Problem 2: Viral Advertising challenge 3/6 """
+    # fptr = open(os.environ['OUTPUT_PATH'], 'w')
+    n = int(input())
+    result = viral_advertising(n)
+    # fptr.write(str(result) + '\n')
+    # fptr.close()
+    print(result)
+
+
+def super_digit(n, k):
+    if len(n) > 1:
+        return super_digit(str(sum(list(map(int, str(n))))), k)
+    elif k > 1:
+        return super_digit(str(n) * k, 1)
+    else:
+        return n
+
+
+def execute_super_digit_challenge():
+    """ Problem 2: Recursive Digit Sum challenge 4/6 """
+    # fptr = open(os.environ['OUTPUT_PATH'], 'w')
+    nk = input().split()
+    n = nk[0]
+    k = int(nk[1])
+    result = super_digit(n, k)
+    # fptr.write(str(result) + '\n')
+    # fptr.close()
+    print(result)
+
+
+def insertion_sort_1(n, arr):
+    new_el = arr[-1]
+    i = n - 2  # n - 1 is the length but the last el is extra, to be inserted
+    while (new_el < arr[i]) and (i >= 0):
+        arr[i + 1] = arr[i]
+        print(*arr)
+        i -= 1
+
+    arr[i + 1] = new_el
+    print(*arr)
+
+
+def execute_insertion_sort_1_challenge():
+    """ Problem 2: Insertion Sort - Part 1 challenge 5/6 """
+    n = int(input())
+    arr = list(map(int, input().rstrip().split()))
+    insertion_sort_1(n, arr)
+
+
+def insertion_sort_2(n, arr):
+    for i in range(1, n):
+        for j in range(i):
+            if arr[i] < arr[j]:
+                arr[i], arr[j] = arr[j], arr[i]
+        print(*arr)
+
+
+def execute_insertion_sort_2_challenge():
+    """ Problem 2: Insertion Sort - Part 2 challenge 6/6 """
+    n = int(input())
+    arr = list(map(int, input().rstrip().split()))
+    insertion_sort_2(n, arr)
+
+
 if __name__ == '__main__':
-    # Problem 1: Introduction
+    # Problem 1: Introduction 7/7
     # execute_say_hello_world_challenge()
     # execute_python_if_else_challenge()
     # execute_arithmetic_operators_challenge()
@@ -1403,7 +1520,7 @@ if __name__ == '__main__':
     # execute_function_is_leap_challenge()
     # execute_print_function_challenge()
 
-    # Problem 1: Data types
+    # Problem 1: Data types 6/6
     # execute_lists_comprehension_challenge()
     # execute_runner_up_score_challenge()
     # execute_nested_lists_challenge()
@@ -1411,7 +1528,7 @@ if __name__ == '__main__':
     # execute_lists_challenge()
     # execute_tuples_challenge()
 
-    # Problem 1: Strings
+    # Problem 1: Strings 14/14
     # execute_swap_case()
     # execute_split_and_join()
     # execute_print_full_name()
@@ -1427,7 +1544,7 @@ if __name__ == '__main__':
     # execute_minion_game()
     # execute_merge_the_tools()
 
-    # Problem 1: Sets
+    # Problem 1: Sets 13/13
     # execute_average()
     # execute_disjoint_sets()
     # execute_symmetric_difference()
@@ -1442,7 +1559,7 @@ if __name__ == '__main__':
     # execute_check_subset()
     # execute_check_strict_superset()
 
-    # Problem 1: Collections
+    # Problem 1: Collections 8/8
     # execute_collections_counter()
     # execute_default_dict()
     # execute_named_tuple()
@@ -1452,22 +1569,22 @@ if __name__ == '__main__':
     # execute_company_logo()
     # execute_piling_up()
 
-    # Problem 1: Date and Time
+    # Problem 1: Date and Time 2/2
     # execute_calendar_module()
     # execute_time_delta()
 
-    # Problem 1: Exceptions
+    # Problem 1: Exceptions 1/1
     # execute_exceptions()
 
-    # Problem 1: Built-ins
+    # Problem 1: Built-ins 3/3
     # execute_zipped()
     # execute_athlete_sort()
     # execute_sorting()
 
-    # Problem 1: Python Functionals
+    # Problem 1: Python Functionals 1/1
     # execute_map_and_lambda()
 
-    # Problem 1: Regex and Parsing challenges
+    # Problem 1: Regex and Parsing challenges 17/17
     # execute_detect_floating_point_number()
     # execute_re_split()
     # execute_re_groups()
@@ -1486,27 +1603,35 @@ if __name__ == '__main__':
     # execute_postal_codes()
     # execute_matrix_script()
 
-    # Problem 1: XML challenges
+    # Problem 1: XML challenges 2/2
     # execute_xml_score()
     # execute_xml_max_depth()
 
-    # Problem 1: Closures and Decorations challenges
+    # Problem 1: Closures and Decorations challenges 2/2
     # execute_decorator_phone()
     # execute_decorator_name()
 
-    # Problem 1: numpy challenges
-    execute_numpy_arrays()
-    execute_numpy_reshape()
-    execute_numpy_transpose_flatten()
-    execute_numpy_concatenate()
-    execute_numpy_zeros_ones()
-    execute_numpy_eye()
-    execute_numpy_arithmetics()
-    execute_numpy_round()
-    execute_numpy_sum_prod()
-    execute_numpy_min_max()
-    execute_numpy_mean_var_std()
-    execute_numpy_dot()
-    execute_numpy_inner_outer_product()
-    execute_numpy_poly_value()
-    execute_numpy_linear_algebra()
+    # Problem 1: numpy challenges 15/15
+    # execute_numpy_arrays()
+    # execute_numpy_reshape()
+    # execute_numpy_transpose_flatten()
+    # execute_numpy_concatenate()
+    # execute_numpy_zeros_ones()
+    # execute_numpy_eye()
+    # execute_numpy_arithmetics()
+    # execute_numpy_round()
+    # execute_numpy_sum_prod()
+    # execute_numpy_min_max()
+    # execute_numpy_mean_var_std()
+    # execute_numpy_dot()
+    # execute_numpy_inner_outer_product()
+    # execute_numpy_poly_value()
+    # execute_numpy_linear_algebra()
+
+    # Problem 2: challenges 6/6
+    # execute_birthday_cake_candles_challenge()
+    # execute_kangaroo_challenge()
+    # execute_viral_advertising_challenge()
+    # execute_super_digit_challenge()
+    # execute_insertion_sort_1_challenge()
+    execute_insertion_sort_2_challenge()
