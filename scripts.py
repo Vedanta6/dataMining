@@ -10,6 +10,9 @@ import calendar
 import email.utils
 from html.parser import HTMLParser as DefaultHTMLParser
 import xml.etree.ElementTree as etree
+import numpy as np
+
+np.set_printoptions(sign=' ')  # print option, inserts space between array values
 
 
 def execute_say_hello_world_challenge():
@@ -1164,9 +1167,12 @@ def execute_xml_score():
     print(get_attr_number(root))
 
 
+maxdepth = 0
+
+
 def execute_xml_max_depth():
     """ Problem 1: XML challenges 2/2 """
-    maxdepth = 0
+    global maxdepth
 
     def depth(elem, level):
         global maxdepth
@@ -1186,20 +1192,19 @@ def execute_xml_max_depth():
 
 
 def wrapper(f):
-    def fun(l):
-        f([f"+91 {li[-10:-5]} {li[-5:]}" for li in l])
+    def fun(line):
+        f([f"+91 {li[-10:-5]} {li[-5:]}" for li in line])
     return fun
 
 
 @wrapper
-def sort_phone(l):
-    print(*sorted(l), sep='\n')
+def sort_phone(line):
+    print(*sorted(line), sep='\n')
 
 
 def execute_decorator_phone():
     """ Problem 1: Closures and Decorations challenges 1/2 """
-    l = [input() for _ in range(int(input()))]
-    sort_phone(l)
+    sort_phone([input() for _ in range(int(input()))])
 
 
 def person_lister(f):
@@ -1217,8 +1222,175 @@ def name_format(person):
 
 def execute_decorator_name():
     """ Problem 1: Closures and Decorations challenges 2/2 """
-    people = [input().split() for i in range(int(input()))]
+    people = [input().split() for _ in range(int(input()))]
     print(*name_format(people), sep='\n')
+
+
+def execute_numpy_arrays():
+    """ Problem 1: numpy challenges 1/15 """
+    def arrays(arr):
+        return np.flip(np.array(arr, np.float))
+
+    result = arrays(input().strip().split(' '))
+    print(result)
+
+
+def execute_numpy_reshape():
+    """ Problem 1: numpy challenges 2/15 """
+    print(np.array(list(map(int, input().split())), int).reshape((3, 3)))
+
+
+def execute_numpy_transpose_flatten():
+    """ Problem 1: numpy challenges 3/15 """
+    n, m = list(map(int, input().split()))
+
+    arr = list()
+    for _ in range(n):
+        arr.append(list(map(int, input().split())))
+
+    arr = np.array(arr, int)
+    print(np.transpose(arr))
+    print(arr.flatten())
+
+
+def execute_numpy_concatenate():
+    """ Problem 1: numpy challenges 4/15 """
+    n, m, p = list(map(int, input().split()))
+
+    arr_n = np.array([input().split() for _ in range(n)], int)
+    arr_m = np.array([input().split() for _ in range(m)], int)
+    print(np.concatenate((arr_n, arr_m), axis=0))
+
+
+def execute_numpy_zeros_ones():
+    """ Problem 1: numpy challenges 5/15 """
+    shape = tuple(map(int, input().split()))
+    print(np.zeros(shape, dtype=np.int))
+    print(np.ones(shape, dtype=np.int))
+
+
+def execute_numpy_eye():
+    """ Problem 1: numpy challenges 6/15 """
+    n, m = list(map(int, input().split()))
+    arr = np.eye(n, m)
+    print(arr)
+
+
+def execute_numpy_arithmetics():
+    """ Problem 1: numpy challenges 7/15 """
+    n, m = list(map(int, input().split()))
+
+    arr_1 = np.zeros((n, m), np.int)
+    for i in range(n):
+        arr_1[i] = np.array(input().split(), np.int)
+
+    arr_2 = np.zeros((n, m), np.int)
+    for i in range(n):
+        arr_2[i] = np.array(input().split(), np.int)
+
+    # Add ( + )
+    print(np.add(arr_1, arr_2))
+    # Subtract ( - )
+    print(np.subtract(arr_1, arr_2))
+    # Multiply ( * )
+    print(np.multiply(arr_1, arr_2))
+    # Integer Division ( / )
+    print(np.divide(arr_1, arr_2).astype(int))
+    # Mod ( % )
+    print(np.mod(arr_1, arr_2))
+    # Power ( ** )
+    print(np.power(arr_1, arr_2))
+
+
+def execute_numpy_round():
+    """ Problem 1: numpy challenges 8/15 """
+    arr = np.array(input().split(), np.float)
+    print(np.floor(arr))
+    print(np.ceil(arr))
+    print(np.rint(arr))
+
+
+def execute_numpy_sum_prod():
+    """ Problem 1: numpy challenges 9/15 """
+    n, m = list(map(int, input().split()))
+    arr = np.zeros((n, m), np.int)
+    for i in range(n):
+        arr[i] = np.array(input().split(), np.int)
+    print(np.prod(np.sum(arr, axis=0)))
+
+
+def execute_numpy_min_max():
+    """ Problem 1: numpy challenges 10/15 """
+    n, m = list(map(int, input().split()))
+    arr = np.zeros((n, m), np.int)
+    for i in range(n):
+        arr[i] = np.array(input().split(), np.int)
+    print(np.max(np.min(arr, axis=1)))
+
+
+def execute_numpy_mean_var_std():
+    """ Problem 1: numpy challenges 11/15 """
+    n, m = list(map(int, input().split()))
+    arr = np.zeros((n, m), np.int)
+    for i in range(n):
+        arr[i] = np.array(input().split(), np.int)
+    print(np.mean(arr, axis=1))
+    print(np.var(arr, axis=0))
+    print(np.round(np.std(arr, axis=None), 12))
+
+
+def execute_numpy_dot():
+    """ Problem 1: numpy challenges 12/15 """
+    # The dot tool returns the dot product of two arrays
+    # The cross tool returns the cross product of two arrays
+    n = int(input())
+
+    arr_1 = np.zeros((n, n), np.int)
+    for i in range(n):
+        arr_1[i] = np.array(input().split(), np.int)
+
+    arr_2 = np.zeros((n, n), np.int)
+    for i in range(n):
+        arr_2[i] = np.array(input().split(), np.int)
+
+    print(np.dot(arr_1, arr_2))
+
+
+def execute_numpy_inner_outer_product():
+    """ Problem 1: numpy challenges 13/15 """
+    # The inner tool returns the inner product of two arrays
+    # The outer tool returns the outer product of two arrays
+    arr_1 = np.array(input().split(), np.int)
+    arr_2 = np.array(input().split(), np.int)
+
+    print(np.inner(arr_1, arr_2))
+    print(np.outer(arr_1, arr_2))
+
+
+def execute_numpy_poly_value():
+    """ Problem 1: numpy challenges 14/15 """
+    # The poly tool returns the coefficients of a polynomial with the given sequence of roots
+    # The roots tool returns the roots of a polynomial with the given coefficients
+    # The polyint tool returns an antiderivative (indefinite integral) of a polynomial
+    # The polyder tool returns the derivative of the specified order of a polynomial
+    # The polyval tool evaluates the polynomial at specific value
+    # The polyfit tool fits a polynomial of a specified order to a set of data using a least-squares approach
+    poly_coefficients = list(map(float, input().split()))
+    print(np.polyval(poly_coefficients, int(input())))
+
+
+def execute_numpy_linear_algebra():
+    """ Problem 1: numpy challenges 15/15 """
+    # The linalg.det tool computes the determinant of an array
+    # The linalg.eig computes the eigenvalues and right eigenvectors of a square array
+    # The linalg.inv tool computes the (multiplicative) inverse of a matrix
+    n = int(input())
+
+    arr = np.zeros((n, n), np.float)
+    for i in range(n):
+        arr[i] = np.array(input().split(), np.float)
+
+    print(np.round(np.linalg.det(arr), 2))
 
 
 if __name__ == '__main__':
@@ -1323,4 +1495,18 @@ if __name__ == '__main__':
     # execute_decorator_name()
 
     # Problem 1: numpy challenges
-    pass
+    execute_numpy_arrays()
+    execute_numpy_reshape()
+    execute_numpy_transpose_flatten()
+    execute_numpy_concatenate()
+    execute_numpy_zeros_ones()
+    execute_numpy_eye()
+    execute_numpy_arithmetics()
+    execute_numpy_round()
+    execute_numpy_sum_prod()
+    execute_numpy_min_max()
+    execute_numpy_mean_var_std()
+    execute_numpy_dot()
+    execute_numpy_inner_outer_product()
+    execute_numpy_poly_value()
+    execute_numpy_linear_algebra()
