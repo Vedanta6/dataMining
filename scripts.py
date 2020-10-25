@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 import re
 import textwrap
+from abc import ABC
 from datetime import datetime
 from string import ascii_lowercase as letters, ascii_letters
 from collections import Counter, OrderedDict, defaultdict, namedtuple, deque
 import calendar
 import email.utils
+from html.parser import HTMLParser as DefaultHTMLParser
 
 
 def execute_say_hello_world_challenge():
@@ -196,7 +198,7 @@ def execute_finding_percentage_challenge():
         query_name = input("Enter a student name: ").strip()
         if query_name in student_marks.keys():
             query_student_scores = student_marks[query_name]
-            if query_student_scores > 0:
+            if len(query_student_scores) > 0:
                 avg_query_student_score = round(sum(query_student_scores) / len(query_student_scores), 2)
                 # note: reminder = 0 leads to .0 result, needs to be corrected while converting into str
                 print(f"{avg_query_student_score:.2f}")
@@ -205,9 +207,9 @@ def execute_finding_percentage_challenge():
 def execute_lists_challenge():
     """ Problem 1: Data types 5/6 """
     # Initializing list
-    N = int(input("Enter number of command you would like to perform on a list: "))
+    n = int(input("Enter number of command you would like to perform on a list: "))
     tmp_list = list()
-    for _ in range(N):
+    for _ in range(n):
         command_name, *command_args = input("Command: ").strip().split()
         command_args = list(map(int, command_args))
         if command_name == 'insert' and len(command_args) == 2:
@@ -414,7 +416,7 @@ def execute_designer_door_mat():
 
         # Bottom
         for i in range(n_decorating_rows):
-            print(('.|.' * ((n_decorating_rows - 1 - i) * 2 + 1) ).center(max_width, '-'))
+            print(('.|.' * ((n_decorating_rows - 1 - i) * 2 + 1)).center(max_width, '-'))
 
 
 def print_formatted(number):
@@ -615,9 +617,9 @@ def execute_sets_union():
 def execute_sets_intersection():
     """ Problem 1: Sets 7/13 """
     _ = int(input())  # "Enter number of elements in a set: "  # 9
-    s1 = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "  # 1 2 3 4 5 6 7 8 9
+    s1 = set(map(int, input().split()))  # "Please enter elements of a set (sep by spaces): "  # 1 2 3 4 5 6 7 8 9
     _ = int(input())  # "Enter number of elements in a set: "  # 9
-    s2 = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "  # 10 1 2 3 11 21 55 6 8
+    s2 = set(map(int, input().split()))  # "Please enter elements of a set (sep by spaces): "  # 10 1 2 3 11 21 55 6 8
     print(len(s1.intersection(s2)))
 
 
@@ -691,7 +693,8 @@ def execute_check_strict_superset():
     for _ in range(n):
         s_i = set(map(int, input().split()))  # "Please enter elements of a set (separated by spaces): "
         res = s.issuperset(s_i)
-        if not res: break
+        if not res:
+            break
     print(res)
 
 
@@ -801,8 +804,8 @@ def execute_deque():
 
 def execute_company_logo():
     """ Problem 1: Collections 7/8 """
-    letters = sorted(input())  # "Enter number of items: "
-    common_letters_counter = dict(Counter(letters).most_common(3))
+    input_letters = sorted(input())  # "Enter number of items: "
+    common_letters_counter = dict(Counter(input_letters).most_common(3))
     for letter, counter in common_letters_counter.items():
         print(f"{letter} {counter}")
 
@@ -911,8 +914,7 @@ def execute_map_and_lambda():
             numbers.append(sum(numbers[-2:]))
         return numbers[:n]
 
-    n = int(input())
-    print(list(map(cube, fibonacci(n))))
+    print(list(map(cube, fibonacci(int(input())))))
 
 
 def execute_detect_floating_point_number():
@@ -999,8 +1001,152 @@ def execute_re_validate_emails():
     n = int(input())
     for _ in range(n):
         name, addr = email.utils.parseaddr(input())
-        if bool(re.match('[a-zA-Z](\w|-|\.)*@[a-zA-Z]*\.[a-zA-Z]{0,3}$', addr)) :
+        if bool(re.match(r'[a-zA-Z](\w|-|\.)*@[a-zA-Z]*\.[a-zA-Z]{0,3}$', addr)):
             print(email.utils.formataddr((name, addr)))
+
+
+def execute_hex_color_code():
+    """ Problem 1: Regex and Parsing challenges 10/17 """
+    n = int(input())
+    pattern = r'[\s:](#[a-f0-9]{6}|#[a-f0-9]{3})'
+    for _ in range(n):
+        line = input()
+        for i in re.findall(pattern, line, re.IGNORECASE):
+            print(i)
+
+
+class HTMLParser(DefaultHTMLParser, ABC):
+
+    def handle_starttag(self, tag, attrs):
+        print(f"{'Start':<6}: {tag}")
+        self.print_attributes(attrs)
+
+    def handle_endtag(self, tag):
+        print(f"{'End':<6}: {tag}")
+
+    def handle_startendtag(self, tag, attrs):
+        print(f"{'Empty':<6}: {tag}")
+        self.print_attributes(attrs)
+
+    @staticmethod
+    def print_attributes(attrs):
+        attrs = attrs or list()
+        for attr_class, attr_value in attrs:
+            print(f"-> {attr_class} > {attr_value}")
+
+
+def execute_html_parser():
+    """ Problem 1: Regex and Parsing challenges 11/17 """
+    # read inputs
+    lines = '\n'.join([input() for _ in range(int(input()))])
+    # feed parser
+    parser = HTMLParser()
+    parser.feed(lines)
+    parser.close()
+
+
+class HTMLParserWithComment(DefaultHTMLParser, ABC):
+
+    def handle_comment(self, data):
+        n_lines = len(data.split('\n'))
+        if n_lines > 1:
+            print('>>> Multi-line Comment')
+        else:
+            print('>>> Single-line Comment')
+        if data.strip():
+            print(data)
+
+    def handle_data(self, data):
+        if data.strip():
+            print(">>> Data")
+            print(data)
+
+
+def execute_html_parser_comment():
+    """ Problem 1: Regex and Parsing challenges 12/17 """
+    html = ""
+    for i in range(int(input())):
+        html += input().rstrip()
+        html += '\n'
+
+    parser = HTMLParserWithComment()
+    parser.feed(html)
+    parser.close()
+
+
+class HTMLParserDetector(DefaultHTMLParser, ABC):
+    def handle_starttag(self, tag, attrs):
+        print(tag)
+        self.print_attributes(attrs)
+
+    @staticmethod
+    def print_attributes(attrs):
+        attrs = attrs or list()
+        for attr_class, attr_value in attrs:
+            print(f"-> {attr_class} > {attr_value}")
+
+
+def execute_html_parser_detector():
+    """ Problem 1: Regex and Parsing challenges 13/17 """
+    html = '\n'.join([input() for _ in range(int(input()))])
+    parser = HTMLParserDetector()
+    parser.feed(html)
+    parser.close()
+
+
+def execute_validate_uid():
+    """ Problem 1: Regex and Parsing challenges 14/17 """
+    patterns = [
+        r'[A-Za-z0-9]{10}',
+        r'([A-Z].*){2}',
+        r'([0-9].*){3}'
+    ]
+    for _ in range(int(input())):
+        uid = input()
+        is_valid = True
+        for pattern in patterns:
+            if is_valid:
+                is_valid = bool(re.search(pattern, uid))
+                if not is_valid:
+                    break
+        if is_valid and bool(re.search(r'.*(.).*\1', uid)):
+            is_valid = False
+        print('Valid' if is_valid else 'Invalid')
+
+
+def execute_validate_cards_numbers():
+    """ Problem 1: Regex and Parsing challenges 15/17 """
+    for _ in range(int(input())):
+        if re.match(r"^(?!.*(\d)(-?\1){3})[456]\d{3}(?:-?\d{4}){3}$", input()):
+            print("Valid")
+        else:
+            print("Invalid")
+
+
+def execute_postal_codes():
+    """ Problem 1: Regex and Parsing challenges 16/17 """
+    regex_integer_in_range = r"^[1-9][\d]{5}$"
+    regex_alternating_repetitive_digit_pair = r"(\d)(?=\d\1)"
+    pattern = input()
+    print(
+        bool(re.match(regex_integer_in_range, pattern))
+        and len(re.findall(regex_alternating_repetitive_digit_pair, pattern)) < 2
+    )
+
+
+def execute_matrix_script():
+    """ Problem 1: Regex and Parsing challenges 17/17 """
+    first_multiple_input = input().rstrip().split()
+
+    n, m = map(int, first_multiple_input)
+
+    matrix = []
+    for _ in range(n):
+        matrix_item = input()
+        matrix.append(matrix_item)
+
+    matrix = ''.join([''.join(mi) for mi in zip(*matrix)])
+    print(re.sub(r'\b[^a-zA-Z\d]+\b', r' ', matrix))
 
 
 if __name__ == '__main__':
@@ -1086,4 +1232,12 @@ if __name__ == '__main__':
     # execute_re_substitution()
     # execute_re_roman_numerals()
     # execute_re_validate_phone_numbers()
-    execute_re_validate_emails()
+    # execute_re_validate_emails()
+    # execute_hex_color_code()
+    # execute_html_parser()
+    # execute_html_parser_comment()
+    # execute_html_parser_detector()
+    # execute_validate_uid()
+    # execute_validate_cards_numbers()
+    # execute_postal_codes()
+    execute_matrix_script()
