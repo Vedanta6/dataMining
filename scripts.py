@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import re
 import textwrap
 from abc import ABC
@@ -8,6 +9,7 @@ from collections import Counter, OrderedDict, defaultdict, namedtuple, deque
 import calendar
 import email.utils
 from html.parser import HTMLParser as DefaultHTMLParser
+import xml.etree.ElementTree as etree
 
 
 def execute_say_hello_world_challenge():
@@ -1149,6 +1151,76 @@ def execute_matrix_script():
     print(re.sub(r'\b[^a-zA-Z\d]+\b', r' ', matrix))
 
 
+def get_attr_number(node):
+    return len(node.attrib) + sum(get_attr_number(child) for child in node)
+
+
+def execute_xml_score():
+    """ Problem 1: XML challenges 1/2 """
+    sys.stdin.readline()
+    xml = sys.stdin.read()
+    tree = etree.ElementTree(etree.fromstring(xml))
+    root = tree.getroot()
+    print(get_attr_number(root))
+
+
+def execute_xml_max_depth():
+    """ Problem 1: XML challenges 2/2 """
+    maxdepth = 0
+
+    def depth(elem, level):
+        global maxdepth
+        if level == maxdepth:
+            maxdepth += 1
+
+        for sub_elem in elem:
+            depth(sub_elem, level + 1)
+
+    n = int(input())
+    xml = ""
+    for i in range(n):
+        xml = xml + input() + "\n"
+    tree = etree.ElementTree(etree.fromstring(xml))
+    depth(tree.getroot(), -1)
+    print(maxdepth)
+
+
+def wrapper(f):
+    def fun(l):
+        f([f"+91 {li[-10:-5]} {li[-5:]}" for li in l])
+    return fun
+
+
+@wrapper
+def sort_phone(l):
+    print(*sorted(l), sep='\n')
+
+
+def execute_decorator_phone():
+    """ Problem 1: Closures and Decorations challenges 1/2 """
+    l = [input() for _ in range(int(input()))]
+    sort_phone(l)
+
+
+def person_lister(f):
+    def inner(people):
+        # 2nd is age, sorting ascending
+        return map(f, sorted(people, key=lambda x: int(x[2])))
+    return inner
+
+
+@person_lister
+def name_format(person):
+    # prefix name last name
+    return ("Mr. " if person[3] == "M" else "Ms. ") + person[0] + " " + person[1]
+
+
+def execute_decorator_name():
+    """ Problem 1: Closures and Decorations challenges 2/2 """
+    people = [input().split() for i in range(int(input()))]
+    print(*name_format(people), sep='\n')
+
+
 if __name__ == '__main__':
     # Problem 1: Introduction
     # execute_say_hello_world_challenge()
@@ -1240,4 +1312,15 @@ if __name__ == '__main__':
     # execute_validate_uid()
     # execute_validate_cards_numbers()
     # execute_postal_codes()
-    execute_matrix_script()
+    # execute_matrix_script()
+
+    # Problem 1: XML challenges
+    # execute_xml_score()
+    # execute_xml_max_depth()
+
+    # Problem 1: Closures and Decorations challenges
+    # execute_decorator_phone()
+    # execute_decorator_name()
+
+    # Problem 1: numpy challenges
+    pass
